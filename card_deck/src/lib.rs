@@ -19,7 +19,8 @@ pub enum Rank {
 
 impl Suit {
     pub fn random() -> Suit {
-        let value = rand::rng().random_range(1..=4);
+        let mut rng = rand::thread_rng();
+        let value = rng.gen_range(1..=4);
         Suit::translate(value)
     }
 
@@ -40,7 +41,8 @@ impl Suit {
 
 impl Rank {
    pub fn random() -> Rank {
-        let value = rand::rng().random_range(1..=13);
+        let mut rng = rand::thread_rng();
+        let value = rng.gen_range(1..=13);
         Rank::translate(value)
     }
 
@@ -61,7 +63,7 @@ impl Rank {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Card {
     pub suit: Suit,
     pub rank: Rank,
