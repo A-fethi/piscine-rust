@@ -6,9 +6,13 @@ pub struct Flag {
     desc: String,
 }
 
-impl<'a> Flag<'a> {
-    pub fn opt_flag(name: &'a str, d: &'a str) -> Self {
-        todo!()
+impl Flag {
+    pub fn opt_flag(name: &str, d: &str) -> Self {
+        Flag {
+            short_hand: format!("-{}", name.chars().nth(0).unwrap()),
+            long_hand: format!("--{}", name),
+            desc: d.to_string(),
+        }
     }
 }
 
@@ -20,18 +24,36 @@ pub struct FlagsHandler {
 
 impl FlagsHandler {
     pub fn add_flag(&mut self, flag: Flag, func: Callback) {
-        todo!()
+        self.flags.insert(flag.short_hand, func);
+        self.flags.insert(flag.long_hand, func);
     }
 
     pub fn exec_func(&self, input: &str, argv: &[&str]) -> Result<String, String> {
-        todo!()
+        let res : Result<String, String> = Ok("".to_string());
+        for i in self.flags.keys() {
+            if i == input {
+                if let Some(f) = self.flags.get(i) {
+                    match f(argv[0], argv[1]) {
+                        Ok(val) => return Ok(val),
+                        Err(e) => return Err(e.to_string()),
+                    }
+                }
+            }
+        }
+        Err(format!("Flag '{}' not found", input))
     }
 }
 
 pub fn div(a: &str, b: &str) -> Result<String, ParseFloatError> {
-    todo!()
+    let x: f64 = a.parse()?;
+    let y: f64 = b.parse()?;
+
+    Ok((x/y).to_string())
 }
 
 pub fn rem(a: &str, b: &str) -> Result<String, ParseFloatError> {
-    todo!()
+    let x: f64 = a.parse()?;
+    let y: f64 = b.parse()?;
+
+    Ok((x%y).to_string())
 }
